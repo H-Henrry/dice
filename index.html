@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>骰子投擲模擬器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h2 {
+            text-align: center;
+        }
+        .control-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        input[type="number"] {
+            padding: 8px;
+            font-size: 16px;
+            width: 120px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* 直方圖容器 */
+        .chart-container {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+        /* 單一長條 */
+        .bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 12%;
+            height: 100%;
+            justify-content: flex-end;
+        }
+        .bar {
+            width: 100%;
+            background-color: #4caf50;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.5s ease-out;
+            height: 0%; /* 初始高度 */
+            position: relative;
+        }
+        .count-label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .dice-label {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>🎲 骰子投擲模擬器</h2>
+
+    <div class="control-panel">
+        <label for="rollCount">請輸入投擲次數：</label>
+        <input type="number" id="rollCount" min="1" max="1000000" value="100">
+        <button onclick="simulateDiceRolls()">開始投擲</button>
+    </div>
+
+    <div class="chart-container">
+        <div class="bar-wrapper">
+            <div class="count-label" id="count-1">0</div>
+            <div class="bar" id="bar-1"></div>
+            <div class="dice-label">1點</div>
+        </div>
+        <div class="bar-wrapper">
+            <div class="count-label" id="count-2">0</div>
+            <div class="bar" id="bar-2"></div>
+            <div class="dice-label">2點</div>
+        </div>
+        <div class="bar-wrapper">
+            <div class="count-label" id="count-3">0</div>
+            <div class="bar" id="bar-3"></div>
+            <div class="dice-label">3點</div>
+        </div>
+        <div class="bar-wrapper">
+            <div class="count-label" id="count-4">0</div>
+            <div class="bar" id="bar-4"></div>
+            <div class="dice-label">4點</div>
+        </div>
+        <div class="bar-wrapper">
+            <div class="count-label" id="count-5">0</div>
+            <div class="bar" id="bar-5"></div>
+            <div class="dice-label">5點</div>
+        </div>
+        <div class="bar-wrapper">
+            <div class="count-label" id="count-6">0</div>
+            <div class="bar" id="bar-6"></div>
+            <div class="dice-label">6點</div>
+        </div>
+    </div>
+
+    <script>
+        function simulateDiceRolls() {
+            const inputCount = document.getElementById('rollCount').value;
+            const totalRolls = parseInt(inputCount);
+
+            if (isNaN(totalRolls) || totalRolls <= 0) {
+                alert('請輸入大於 0 的有效數字！');
+                return;
+            }
+
+
+            const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+
+            for (let i = 0; i < totalRolls; i++) {
+                const roll = Math.floor(Math.random() * 6) + 1;
+                counts[roll]++;
+            }
+
+            let maxCount = 0;
+            for (let i = 1; i <= 6; i++) {
+                if (counts[i] > maxCount) {
+                    maxCount = counts[i];
+                }
+            }
+
+            for (let i = 1; i <= 6; i++) {
+                document.getElementById(`count-${i}`).innerText = counts[i];
+
+                const percentage = maxCount > 0 ? (counts[i] / maxCount) * 100 : 0;
+                
+                document.getElementById(`bar-${i}`).style.height = `${percentage * 0.8}%`;
+            }
+        }
+    </script>
+</body>
+</html>
